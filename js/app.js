@@ -20,7 +20,8 @@ $(document).ready(function () {
     let color = 'selecttheme';
     let totalPrice = 0;
     let errorCount = 0; //to count for the errors in the document
-    let paymentMethod = 'Select Payment Method';
+    let paymentMethod = 'Credit Card'; //default payment method.
+    $('.payment-info').hide(); //hides the payment info untill an activity is selected.
     let all = ''; //used at the end on submission to select all DOM elements.
     $('.activities').after(`<p class="cost"><strong>Total Cost: $${totalPrice}.00</strong></p>`);
 
@@ -254,26 +255,24 @@ $(document).ready(function () {
 
 
     //Tshirt Design Section:
+    $('#colors-js-puns').hide();
 
     $('#design').change(function () {
         design = $(this).children('option:selected').text();
         if (design == 'Select Theme') {
-            $('#selecttheme').text('Please select a T-shirt theme');
+            $('#selecttheme').text('Please select a T-shirt color');
+            document.querySelector('#selecttheme').selected = true;
+            $('#colors-js-puns').hide();
 
-            //using vanilla js to set attribute. idk why $('#selecttheme').attr('selected',true); not working.
-            document.querySelector('#selecttheme').setAttribute('selected', true);
-            $('#tomato').hide();
-            $('#steelblue').hide();
-            $('#dimgrey').hide();
-            $('#cornflowerblue').hide();
-            $('#darkslategrey').hide();
-            $('#gold').hide();
 
         }
         if (design.toLowerCase() !== 'select theme') {
             removeStylesOfTshirts();
+            $('#colors-js-puns').show();
+
             $('#selecttheme').text('Please select a T-shirt color');
             if (design == 'Theme - JS Puns') {
+                document.querySelector('#selecttheme').selected = true;
                 $('#tomato').hide();
                 $('#steelblue').hide();
                 $('#dimgrey').hide();
@@ -283,6 +282,7 @@ $(document).ready(function () {
                 $('#gold').show();
 
             } else if (design == 'Theme - I ♥ JS') {
+                document.querySelector('#selecttheme').selected = true;
                 $('#cornflowerblue').hide();
                 $('#darkslategrey').hide();
                 $('#gold').hide();
@@ -308,7 +308,8 @@ $(document).ready(function () {
 
     //Events handler. (Updates price and hides checkboxes for same time)
     $('input[type=checkbox]').on('click', (e) => {
-        if (!$(e.target).attr('checked')) {
+
+        if (e.target.checked == true) {
             if (e.target.id == 'jsframeworks') {
                 $('#express').attr('disabled', true);
             } else if (e.target.id == 'express') {
@@ -322,7 +323,7 @@ $(document).ready(function () {
             e.target.setAttribute('checked', true);
             totalPrice = totalPrice + parseInt($(e.target).data('price'));
 
-        } else {
+        } else if (e.target.checked == false) {
             totalPrice = totalPrice - parseInt($(e.target).data('price'));
             if (e.target.id == 'jsframeworks') {
                 $('#express').attr('disabled', false);
@@ -336,23 +337,50 @@ $(document).ready(function () {
             }
         }
 
+        if (totalPrice !== 0) {
+            $('.payment-info').show();
+        } else {
+            $('.payment-info').hide();
+
+        }
+
         $('.cost').html(`<p><strong>Total Cost: $${totalPrice}.00</strong></p>`);
 
 
     });
 
+
     //Payment info
-    $('#credit-card').hide();
+    function showCardError() {
+        $('.payment-info legend').html('Payment Info (Please Fill in the correct details.)');
+        $('.payment-info legend').css('color', 'red');
+    }
+
+    $('#paypal-div').hide();
+    $('#bitcoin-div').hide();
+    $('#select-method').remove();
+
+
+    //selects the Credit Card as default payment option
+    (document.querySelector('#payment').children)[0].selected = true;
+
+
+
 
     $('#payment').change(function () {
         paymentMethod = $('#payment').children('option:selected').text();
-        if (paymentMethod != 'Select Payment Method') {
-            removeStylesOfPayment();
-        }
         if (paymentMethod.toLowerCase() == 'credit card') {
             $('#credit-card').show();
-        } else {
+            $('#paypal-div').hide();
+            $('#bitcoin-div').hide();
+        } else if (paymentMethod == 'PayPal') {
             $('#credit-card').hide();
+            $('#paypal-div').show();
+            $('#bitcoin-div').hide();
+        } else if (paymentMethod == 'Bitcoin') {
+            $('#credit-card').hide();
+            $('#paypal-div').hide();
+            $('#bitcoin-div').show();
         }
     });
 
@@ -368,8 +396,19 @@ $(document).ready(function () {
         for (let i = 0; i < checkboxes.length; i++) {
             checkboxes[i].removeAttribute('checked');
         }
+        //resets the pricing to normal
         totalPrice = 0;
         $('.cost').html(`<p><strong>Total Cost: $${totalPrice}.00</strong></p>`);
+
+        $('#colors-js-puns').hide();
+
+        //resets the payment method to normal
+        $('.payment-info').hide();
+        (document.querySelector('#payment').children)[0].selected = true;
+        $('#select-method').hide();
+        $('#credit-card').show();
+        $('#paypal-div').hide();
+        $('#bitcoin-div').hide();
 
         //remove styles of everything of normal
         removeStylesOfName();
@@ -403,48 +442,50 @@ $(document).ready(function () {
             errorCount++;
         }
 
-        //checks for empty fields inside credit card div only when credit card is selected.
-        if (paymentMethod.toLowerCase() == 'credit card') {
-            //checks if cc-num field is empty
-            if ($('#cc-num').val() == '') {
-                setStylesOfCcNum();
-                errorCount++;
+        //only checks for empty card details if some event is selected.
+        if (totalPrice !== 0) {
+            //checks for empty fields inside credit card div only when credit card is selected.
+            if (paymentMethod.toLowerCase() == 'credit card') {
+
+                //checks if cc-num field is empty
+                if ($('#cc-num').val() == '') {
+                    setStylesOfCcNum();
+                    errorCount++;
+                    showCardError();
+                }
+                //checks if cvv is empty
+                if ($('#cvv').val() == '') {
+                    setStylesOfCvv();
+                    errorCount++;
+                    showCardError();
+                }
+
+                //checks if zip is empty
+                if ($('#zip').val() == '') {
+                    setStylesOfZip();
+                    errorCount++;
+                    showCardError();
+                }
             }
-            //checks if cvv is empty
-            if ($('#cvv').val() == '') {
-                setStylesOfCvv();
-                errorCount++;
-            }
-
-            //checks if zip is empty
-            if ($('#zip').val() == '') {
-                setStylesOfZip();
-                errorCount++;
-            }
         }
 
-        //checks whether jobrole is selected or not
-        if (selectedJobRole == 'select-a-role') {
-            $('#title').prev().remove();
-            $('#title').before('<label for="title">Title: (Please Select a Job Role)</label>');
-            $('#title').prev().css('color', 'red');
-            errorCount++;
-        }
+        //Job Role and T-shirt selection not needed for a valid submit. If needed, uncomment.
 
-        //checks whether design and color is selected or not
-        if (design == 'Select Theme' || color == 'selecttheme') {
-            $('.shirt legend').html(`T-Shirt Info (Please select all the details)`);
-            $('.shirt legend').css('color', 'red');
-            errorCount++;
-
-        }
-
-        //checks whether paymentMethod is selected or not
-        if (paymentMethod == 'Select Payment Method') {
-            $('.payment-info legend').html('Payment Info (Please Selecet a valid payment method)');
-            $('.payment-info legend').css('color', 'red');
-            errorCount++;
-        }
+//        //checks whether jobrole is selected or not
+//        if (selectedJobRole == 'select-a-role') {
+//            $('#title').prev().remove();
+//            $('#title').before('<label for="title">Title: (Please Select a Job Role)</label>');
+//            $('#title').prev().css('color', 'red');
+//            errorCount++;
+//        }
+//
+//        //checks whether design and color is selected or not
+//        if (design == 'Select Theme' || color == 'selecttheme') {
+//            $('.shirt legend').html(`T-Shirt Info (Please select all the details)`);
+//            $('.shirt legend').css('color', 'red');
+//            errorCount++;
+//
+//        }
 
         //checks for error count
         if (errorCount == 0) {
