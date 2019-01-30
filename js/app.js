@@ -74,87 +74,36 @@ $(document).ready(function () {
     });
 
     //--------------------------------------//
-    // CSS SETTERS //
+    // CSS SETTER //
     //--------------------------------------//
-    function setStylesOfName() {
-        $('#name').css('border', '2px solid red');
-        $('#name').prev().remove();
-        $('#name').before('<label for="name">Name: (Invalid)</label>');
-        $('#name').prev().css('color', 'red');
+
+    function setStyles(id){
+        $(`#${id}`).css('border', '2px solid red');
+        const innerText = $(`#${id}`).prev().text();
+        const firstInnerText = innerText.split(' ');
+        $(`#${id}`).prev().remove();
+        $(`#${id}`).before(`<label for="${id}">${firstInnerText[0]} (Invalid)</label>`);
+        $(`#${id}`).prev().css('color', 'red');
     }
 
-    function setStylesOfEmail() {
-        $('#mail').css('border', '2px solid red');
-        $('#mail').prev().remove();
-        $('#mail').before('<label for="mail">Email: (Invalid)</label>');
-        $('#mail').prev().css('color', 'red');
-
-    }
-
-    function setStylesOfCcNum() {
-        $('#cc-num').css('border', '2px solid red');
-        $('#cc-num').prev().remove();
-        $('#cc-num').before('<label for="cc-num">Card Number: (Invalid)</label>');
-        $('#cc-num').prev().css('color', 'red');
-
-    }
-
-    function setStylesOfZip() {
-        $('#zip').css('border', '2px solid red');
-        $('#zip').prev().remove();
-        $('#zip').before('<label for="zip">Zip Code: (Invalid)</label>');
-        $('#zip').prev().css('color', 'red');
-
-    }
-
-    function setStylesOfCvv() {
-        $('#cvv').css('border', '2px solid red');
-        $('#cvv').prev().remove();
-        $('#cvv').before('<label for="cvv">CVV: (Invalid)</label>');
-        $('#cvv').prev().css('color', 'red');
-
+    function showCardError() {
+        $('.payment-info legend').html('Payment Info (Please Fill in the correct details.)');
+        $('.payment-info legend').css('color', 'red');
     }
 
     //--------------------------------------//
     // CSS REMOVERS //
     //--------------------------------------//
 
-    function removeStylesOfName() {
-        $('#name').prev().remove();
-        $('#name').before('<label for="name">Name:</label>');
-        $('#name').prev().css('color', '#000');
-        $(`#name`).css('border', '0');
+    function removeStyles(id){
+        $(`#${id}`).css('border', '0');
+        const innerText = $(`#${id}`).prev().text();
+        const firstInnerText = innerText.split(' ');
+        $(`#${id}`).prev().remove();
+        $(`#${id}`).before(`<label for="${id}">${firstInnerText[0]}</label>`);
+        $(`#${id}`).prev().css('color', '#000');
     }
 
-    function removeStylesOfEmail() {
-        $('#mail').prev().remove();
-        $('#mail').before('<label for="name">Email:</label>');
-        $('#mail').prev().css('color', '#000');
-        $(`#mail`).css('border', '0');
-
-    }
-
-    function removeStylesOfCcNum() {
-        $('#cc-num').prev().remove();
-        $('#cc-num').before('<label for="cc-num">Card Number:</label>');
-        $('#cc-num').prev().css('color', '#000');
-        $(`#cc-num`).css('border', '0');
-
-    }
-
-    function removeStylesOfZip() {
-        $('#zip').prev().remove();
-        $('#zip').before('<label for="zip">Zip Code:</label>');
-        $('#zip').prev().css('color', '#000');
-        $(`#zip`).css('border', '0');
-    }
-
-    function removeStylesOfCvv() {
-        $('#cvv').prev().remove();
-        $('#cvv').before('<label for="cvv">CVV: </label>');
-        $('#cvv').prev().css('color', '#000');
-        $(`#cvv`).css('border', '0');
-    }
 
     function removeStylesOfJobRole() {
         $('#title').prev().remove();
@@ -182,37 +131,37 @@ $(document).ready(function () {
         if ($(e.target).val() !== '') {
             if (id == 'name') {
                 if (nameValidator($(e.target).val()) !== true) {
-                    setStylesOfName();
+                    setStyles(id);
                 } else {
-                    removeStylesOfName();
+                    removeStyles(id);
 
                 }
             } else if (id == 'mail') {
                 if (emailValidator($(e.target).val()) !== true) {
-                    setStylesOfEmail();
+                    setStyles(id);
                 } else {
-                    removeStylesOfEmail();
+                    removeStyles(id);
 
                 }
             } else if (id == 'cc-num') {
                 if (cardValidator('cc-num', $(e.target).val()) !== true) {
-                    setStylesOfCcNum();
+                    setStyles(id);
                 } else {
-                    removeStylesOfCcNum();
+                    removeStyles(id);
 
                 }
             } else if (id == 'zip') {
                 if (cardValidator('zip', $(e.target).val()) !== true) {
-                    setStylesOfZip();
+                    setStyles(id);
                 } else {
-                    removeStylesOfZip();
+                    removeStyles(id);
 
                 }
             } else if (id == 'cvv') {
                 if (cardValidator('cvv', $(e.target).val()) !== true) {
-                    setStylesOfCvv();
+                    setStyles(id);
                 } else {
-                    removeStylesOfCvv();
+                    removeStyles(id);
 
                 }
             }
@@ -257,6 +206,7 @@ $(document).ready(function () {
     //Tshirt Design Section:
     $('#colors-js-puns').hide();
 
+
     $('#design').change(function () {
         design = $(this).children('option:selected').text();
         if (design == 'Select Theme') {
@@ -273,6 +223,7 @@ $(document).ready(function () {
             $('#selecttheme').text('Please select a T-shirt color');
             if (design == 'Theme - JS Puns') {
                 document.querySelector('#selecttheme').selected = true;
+
                 $('#tomato').hide();
                 $('#steelblue').hide();
                 $('#dimgrey').hide();
@@ -283,6 +234,7 @@ $(document).ready(function () {
 
             } else if (design == 'Theme - I ♥ JS') {
                 document.querySelector('#selecttheme').selected = true;
+
                 $('#cornflowerblue').hide();
                 $('#darkslategrey').hide();
                 $('#gold').hide();
@@ -351,10 +303,7 @@ $(document).ready(function () {
 
 
     //Payment info
-    function showCardError() {
-        $('.payment-info legend').html('Payment Info (Please Fill in the correct details.)');
-        $('.payment-info legend').css('color', 'red');
-    }
+
 
     $('#paypal-div').hide();
     $('#bitcoin-div').hide();
@@ -374,10 +323,18 @@ $(document).ready(function () {
             $('#paypal-div').hide();
             $('#bitcoin-div').hide();
         } else if (paymentMethod == 'PayPal') {
+            removeStylesOfPayment();
+            removeStyles('cc-num');
+            removeStyles('cvv');
+            removeStyles('zip');
             $('#credit-card').hide();
             $('#paypal-div').show();
             $('#bitcoin-div').hide();
         } else if (paymentMethod == 'Bitcoin') {
+            removeStylesOfPayment();
+            removeStyles('cc-num');
+            removeStyles('cvv');
+            removeStyles('zip');
             $('#credit-card').hide();
             $('#paypal-div').hide();
             $('#bitcoin-div').show();
@@ -395,6 +352,7 @@ $(document).ready(function () {
         const checkboxes = document.querySelectorAll('input[type=checkbox]');
         for (let i = 0; i < checkboxes.length; i++) {
             checkboxes[i].removeAttribute('checked');
+            checkboxes[i].removeAttribute('disabled');
         }
         //resets the pricing to normal
         totalPrice = 0;
@@ -411,11 +369,11 @@ $(document).ready(function () {
         $('#bitcoin-div').hide();
 
         //remove styles of everything of normal
-        removeStylesOfName();
-        removeStylesOfEmail();
-        removeStylesOfCcNum();
-        removeStylesOfCvv();
-        removeStylesOfZip();
+        removeStyles('name');
+        removeStyles('mail');
+        removeStyles('cc-num');
+        removeStyles('cvv');
+        removeStyles('zip');
         removeStylesOfJobRole();
         removeStylesOfTshirts();
         removeStylesOfPayment();
@@ -425,6 +383,10 @@ $(document).ready(function () {
         reset();
     });
 
+
+
+
+
     //Submit Button Handler.
     $('button[type=submit]').on('click', (e) => {
         errorCount = 0;
@@ -432,13 +394,13 @@ $(document).ready(function () {
 
         //checks if name field is empty
         if ($('#name').val() == '') {
-            setStylesOfName();
+            setStyles('name');
             errorCount++;
         }
 
         //checks if email field is empty
         if ($('#mail').val() == '') {
-            setStylesOfEmail();
+            setStyles('mail');
             errorCount++;
         }
 
@@ -449,43 +411,43 @@ $(document).ready(function () {
 
                 //checks if cc-num field is empty
                 if ($('#cc-num').val() == '') {
-                    setStylesOfCcNum();
+                    setStyles('cc-num');
                     errorCount++;
                     showCardError();
                 }
                 //checks if cvv is empty
                 if ($('#cvv').val() == '') {
-                    setStylesOfCvv();
+                    setStyles('cvv');
                     errorCount++;
                     showCardError();
                 }
 
                 //checks if zip is empty
                 if ($('#zip').val() == '') {
-                    setStylesOfZip();
+                    setStyles('zip');
                     errorCount++;
                     showCardError();
                 }
             }
         }
 
-        //Job Role and T-shirt selection not needed for a valid submit. If needed, uncomment.
 
-//        //checks whether jobrole is selected or not
-//        if (selectedJobRole == 'select-a-role') {
-//            $('#title').prev().remove();
-//            $('#title').before('<label for="title">Title: (Please Select a Job Role)</label>');
-//            $('#title').prev().css('color', 'red');
-//            errorCount++;
-//        }
-//
-//        //checks whether design and color is selected or not
-//        if (design == 'Select Theme' || color == 'selecttheme') {
-//            $('.shirt legend').html(`T-Shirt Info (Please select all the details)`);
-//            $('.shirt legend').css('color', 'red');
-//            errorCount++;
-//
-//        }
+
+        //checks whether jobrole is selected or not
+        if (selectedJobRole == 'select-a-role') {
+            $('#title').prev().remove();
+            $('#title').before('<label for="title">Job Role (Please Select a Job Role)</label>');
+            $('#title').prev().css('color', 'red');
+            errorCount++;
+        }
+
+        //checks whether design and color is selected or not
+        if (design == 'Select Theme' || color == 'selecttheme') {
+            $('.shirt legend').html(`T-Shirt Info (Please select all the details)`);
+            $('.shirt legend').css('color', 'red');
+            errorCount++;
+
+        }
 
         //checks for error count
         if (errorCount == 0) {

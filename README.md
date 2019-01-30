@@ -12,3 +12,8 @@ Lots of fixes, added basic card validation, cleaned up code.
 2. payment option only shows when cost > 0, 
 3. t-shirt and job selection not required for valid form submission.
 4. Better UX in the Payment section, set default payment to credit-card.
+
+# V3.01 (Day 3): 
+1. Refactored the CSS Setters and Removers.
+2. Clicking reset buttons now clears the 'disabled' attribute on checkboxes.
+3. T-shirt field and Job Role also required for valid form submission. 
