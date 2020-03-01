@@ -1,5 +1,5 @@
 # Interactive form
-Teamtreehouse Full-Stack JS Techdegree project 3. (Interactive Form) 
+Project 3. (Interactive Form) 
 
 Preview: https://anushpoudel.github.io/interactive-form/
 
